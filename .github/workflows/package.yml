@@ -3,7 +3,7 @@ name: package_env
 on:
   push:
   # TODO: react also on reopening the PR.
-  # pull_request:
+  # pull_request: s
   workflow_dispatch:
 
 jobs:
