@@ -74,7 +74,6 @@ jobs:
       - name: Check env
         run: |
           # For reference: https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html.
-          set -vxeuo pipefail
           conda info
           conda env list
           conda list
@@ -82,6 +81,7 @@ jobs:
           conda config --show-sources
           conda config --show
           printenv | sort
+        #original line 1: set -vxeuo pipefail
 
       - name: Export files
         run: |
@@ -122,10 +122,10 @@ jobs:
           github.ref != 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
-          name: test-${{ env.CONDA_PACK_ENV_NAME }}-${{ env.DATETIME_STRING }}
+          name: test-${{ env.CONDA_PACK_ENV_NAME }}
           path: ${{ env.ARTIFACTS_DIR }}
           retention-days: 14
-
+        #-${{ env.DATETIME_STRING }}
       - name: Upload artifacts for release
         if: |
           github.ref == 'refs/heads/main'
