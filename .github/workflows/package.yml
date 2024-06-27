@@ -147,9 +147,10 @@ jobs:
       CHECKOUT_FOLDER: Ipython_test
     strategy:
       fail-fast: false
+      # just branch is the branch of profile_collections to clone and the profile_granch is the branch of profile_collections to clone the startup directory
       matrix:
         os: [ ubuntu-latest ]
-        repos: [ { org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "csx" },
+        repos: [ { org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "csx" },
                  { org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "srx" } ]
     runs-on: ubuntu-latest
 #    env:
