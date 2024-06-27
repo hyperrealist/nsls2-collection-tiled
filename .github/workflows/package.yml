@@ -152,12 +152,12 @@ jobs:
         repos: [ { org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "csx" },
                  { org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "srx" } ]
     runs-on: ubuntu-latest
-    env:
-      TEST_CONDA_PACKED_NAME: ${{ needs.generate_conda_packd_env.outputs.test_conda_packed_name}}
+#    env:
+#      TEST_CONDA_PACKED_NAME: ${{ needs.generate_conda_packd_env.outputs.test_conda_packed_name}}
     steps:
       - run: |
           echo "${{ needs.generate_conda_packd_envs.outputs.test_conda_packed_name }}"
-          echo ${{ env.TEST_CONDA_PACKED_NAME }}
+          echo "TEST_CONDA_PACKED_NAME=${{ needs.generate_conda_packd_envs.outputs.test_conda_packed_name }}" >> $GITHUB_ENV
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Cloning Remote Repositories
