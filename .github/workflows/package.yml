@@ -145,32 +145,29 @@ jobs:
 #      CONDA_PREFIX: home/runner/miniconda
 #      PROFILE_NAME: test
 #      CHECKOUT_FOLDER: Ipython_test
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        os: [ ubuntu-latest ]
-#        repos: [ { org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "csx" },
-#                 { org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "srx" } ]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        repos: [ { org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "csx" },
+                 { org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "srx" } ]
     runs-on: ubuntu-latest
-#    env:
-#      TEST_CONDA_PACKED_NAME: ${{ needs.generate_conda_packd_env.outputs.test_conda_packed_name}}
+    env:
+      TEST_CONDA_PACKED_NAME: ${{ needs.generate_conda_packd_env.outputs.test_conda_packed_name}}
     steps:
       - run: echo "${{ needs.generate_conda_packd_envs.outputs.test_conda_packed_name }}"
-#      - name: Checkout Repository
-#        uses: actions/checkout@v4
-#      - name: Cloning Remote Repositories
-#        run: |
-#          mkdir "${{matrix.repos.repo}}"
-#          git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}" "${{matrix.repos.repo}}"
-#      - name: Check For Conda
-#        run: |
-#          conda --version
-#          conda env list
-#      - name: Check local environment
-#        run: |
-#          pwd
-#          ls
-#      - name: Downloading Conda Artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: conda_artifact
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Cloning Remote Repositories
+        run: |
+          mkdir "${{matrix.repos.repo}}"
+          git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}" "${{matrix.repos.repo}}"
+      - name: Downloading Conda Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: test-${{ env.TEST_CONDA_PACKED_NAME}}
+      - name: Downloading Conda YML
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.TEST_CONDA_PACKED_NAME}}.yml
+      - run: ls
