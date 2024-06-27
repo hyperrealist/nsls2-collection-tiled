@@ -287,6 +287,7 @@ jobs:
           supervisor/start_supervisor.sh status
       - name: Start IPython
         run: |
+          set -euo pipefail
           eval "$(conda shell.bash hook)"
           conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.TEST_CONDA_PACKED_NAME }}"
           ipython --profile ${{env.PROFILE_NAME}}
