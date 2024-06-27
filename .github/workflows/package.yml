@@ -12,7 +12,7 @@ jobs:
     name: conda-pack'd env with Python ${{ inputs.version }}
     runs-on: ubuntu-latest
     outputs:
-      test_conda_packed_name: ${{ steps.test-conda-packed-name.${{ env.CONDA_PACK_ENV_NAME }} }}
+      test_conda_packed_name: ${{ steps.test-conda-packed-name.TEST_ENV_NAME }}
     env:
       TZ: America/New_York
 
@@ -128,7 +128,7 @@ jobs:
 
       - name: passing output
         id: test-conda-packed-name
-        run: echo "${{ env.CONDA_PACK_ENV_NAME }}=$test_conda_packed_name" >> $GITHUB_OUTPUT
+        run: echo "TEST_ENV_NAME=${{ env.CONDA_PACK_ENV_NAME }}" >> $GITHUB_OUTPUT
 
         #-${{ env.DATETIME_STRING }}
 #      - name: Upload artifacts for release
