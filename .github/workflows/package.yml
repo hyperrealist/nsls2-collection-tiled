@@ -50,8 +50,9 @@ jobs:
           env_name=$(cat configs/config-py${PYTHONVER}.yml | shyaml get-value env_name)
           export CONDA_PACK_ENV_NAME=${env_name}
           echo "CONDA_PACK_ENV_NAME=${CONDA_PACK_ENV_NAME}" >> $GITHUB_ENV
-
+  
           env | sort -u
+          echo "$GITHUB_ENV"
 
       # - uses: conda-incubator/setup-miniconda@v3
       #   with:
@@ -131,8 +132,8 @@ jobs:
           name: ${{ env.CONDA_PACK_ENV_NAME }}
           path: ${{ env.ARTIFACTS_DIR }}
           retention-days: 60
-#  testing_conda_artifact:
-#    needs: generate_conda_packd_envs
+  testing_conda_artifact:
+    needs: generate_conda_packd_envs
 #    env:
 #      CONDA_ENV_NAME: 2023-3.3-py310-tiled
 #      CONDA_PREFIX: home/runner/miniconda
@@ -144,8 +145,9 @@ jobs:
 #        os: [ ubuntu-latest ]
 #        repos: [ { org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "csx" },
 #                 { org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "srx" } ]
-#    runs-on: ${{ matrix.os }}
-#    steps:
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: echo "$GITHUB_ENV"
 #      - name: Checkout Repository
 #        uses: actions/checkout@v4
 #      - name: Cloning Remote Repositories
