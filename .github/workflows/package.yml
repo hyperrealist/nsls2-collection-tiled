@@ -155,7 +155,7 @@ jobs:
 #    env:
 #      TEST_CONDA_PACKED_NAME: ${{ needs.generate_conda_packd_env.outputs.test_conda_packed_name}}
     steps:
-      - run: echo "${{ needs.generate_conda_packd_envs.test_conda_packed_name }}"
+      - run: echo "${{ needs.generate_conda_packd_envs.outputs.test_conda_packed_name }}"
 #      - name: Checkout Repository
 #        uses: actions/checkout@v4
 #      - name: Cloning Remote Repositories
