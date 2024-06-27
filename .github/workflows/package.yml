@@ -155,7 +155,9 @@ jobs:
     env:
       TEST_CONDA_PACKED_NAME: ${{ needs.generate_conda_packd_env.outputs.test_conda_packed_name}}
     steps:
-      - run: echo "${{ needs.generate_conda_packd_envs.outputs.test_conda_packed_name }}"
+      - run: |
+          echo "${{ needs.generate_conda_packd_envs.outputs.test_conda_packed_name }}"
+          echo ${{ env.TEST_CONDA_PACKED_NAME }}
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Cloning Remote Repositories
@@ -165,9 +167,9 @@ jobs:
       - name: Downloading Conda Artifact
         uses: actions/download-artifact@v4
         with:
-          name: test-${{ env.TEST_CONDA_PACKED_NAME}}
+          name: test-${{ env.TEST_CONDA_PACKED_NAME  }}
       - name: Downloading Conda YML
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.TEST_CONDA_PACKED_NAME}}.yml
+          name: ${{ env.TEST_CONDA_PACKED_NAME  }}.yml
       - run: ls
