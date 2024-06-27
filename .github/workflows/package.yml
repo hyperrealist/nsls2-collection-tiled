@@ -1,19 +1,16 @@
 name: package_env
 
 on:
-  push:
-  # TODO: react also on reopening the PR.
-  # pull_request: s
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      version: # the variable you can use in place of a matrix
+        required: true
+        type: string
 
 jobs:
   generate_conda_packd_envs:
-    name: conda-pack'd env with Python ${{ matrix.python-version }}
+    name: conda-pack'd env with Python ${{ inputs.version }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
-      fail-fast: false
     env:
       TZ: America/New_York
 
@@ -44,7 +41,7 @@ jobs:
           export DATETIME_STRING=$(date +%Y%m%d%H%M%S)
           echo "DATETIME_STRING=${DATETIME_STRING}" >> $GITHUB_ENV
 
-          export PYTHONVER=$(echo ${{ matrix.python-version }} | sed 's/\.//g')
+          export PYTHONVER=$(echo ${{ inputs.version }} | sed 's/\.//g')
           echo "PYTHONVER=${PYTHONVER}" >> $GITHUB_ENV
 
           export CONDA_PACK_TEMPLATE_DIR=${HOME}/conda-pack-template
@@ -134,28 +131,36 @@ jobs:
           name: ${{ env.CONDA_PACK_ENV_NAME }}
           path: ${{ env.ARTIFACTS_DIR }}
           retention-days: 60
-  testing_conda_artifact:
-    needs: generate_conda_packd_envs
-    env:
-      CONDA_ENV_NAME: 2023-3.3-py310-tiled
-      CONDA_PREFIX: home/runner/miniconda
-      PROFILE_NAME: test
-      CHECKOUT_FOLDER: Ipython_test
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-latest ]
-        repos: [ { org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "csx" },
-                 { org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "srx" } ]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      - name: Cloning Remote Repositories
-        run: |
-          mkdir "${{matrix.repos.repo}}"
-          git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}" "${{matrix.repos.repo}}"
-      - name: Check For Conda
-        run: |
-          conda --version
-          conda env list
+#  testing_conda_artifact:
+#    needs: generate_conda_packd_envs
+#    env:
+#      CONDA_ENV_NAME: 2023-3.3-py310-tiled
+#      CONDA_PREFIX: home/runner/miniconda
+#      PROFILE_NAME: test
+#      CHECKOUT_FOLDER: Ipython_test
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os: [ ubuntu-latest ]
+#        repos: [ { org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "csx" },
+#                 { org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "srx" } ]
+#    runs-on: ${{ matrix.os }}
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v4
+#      - name: Cloning Remote Repositories
+#        run: |
+#          mkdir "${{matrix.repos.repo}}"
+#          git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}" "${{matrix.repos.repo}}"
+#      - name: Check For Conda
+#        run: |
+#          conda --version
+#          conda env list
+#      - name: Check local environment
+#        run: |
+#          pwd
+#          ls
+#      - name: Downloading Conda Artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: conda_artifact
