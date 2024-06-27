@@ -244,8 +244,53 @@ jobs:
           tar -xf "${{ env.TEST_CONDA_PACKED_NAME }}.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs/${{ env.TEST_CONDA_PACKED_NAME }}"
 
           set +u
-          conda init bash
+          eval "$(conda shell.bash hook)"
           conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.TEST_CONDA_PACKED_NAME }}"
           conda unpack && echo "Unpacked successfully!"
           set -u
           conda env list
+      - name: Configuring Redis
+        uses: shogo82148/actions-setup-redis@v1
+        with:
+          redis-version: latest
+      - name: Configuring Mongo
+        uses: supercharge/mongodb-github-action@1.11.0
+        with:
+          mongodb-version: '4.4'
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Performing Beamline Actions
+        env:
+          BEAMLINE_ACRONYM: ${{matrix.repos.beamline_acronym}}
+        run: |
+          echo "Performing beamline-specific tasks..."
+          cfg_dir="/nsls2/data/$BEAMLINE_ACRONYM/shared/config"
+          if [[ ! -d "$cfg_dir" ]]; then
+            sudo mkdir -v -p "$cfg_dir" ||
+            (
+              echo "Error: Couldn't create dir: $cfg_dir"
+              exit 1
+            )
+          fi
+      - name: Setting up Blackhole IOC
+        run: |
+          python3 -m pip install -U caproto
+          echo | python3 -m caproto.ioc_examples.pathological.spoof_beamline &
+          trap 'kill -SIGINT %1; echo exiting...' EXIT
+          sudo ln -svf caproto-repeater "/bin/caRepeater"
+      - name: Checking Blackhole IOC PV's
+        run: |
+          sudo pip install supervisor
+          chmod +x supervisor/start_supervisor.sh
+          supervisor/start_supervisor.sh status
+      - name: Start IPython
+        run: |
+          eval "$(conda shell.bash hook)"
+          conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.TEST_CONDA_PACKED_NAME }}"
+          ipython --profile ${{env.PROFILE_NAME}}
+
+#          for tiled_profile_name in nsls2 ${{matrix.repos.beamline_acronym}}; do
+#            tiled profile create --name $tiled_profile_name https://127.0.0.1:8000
+#          done
