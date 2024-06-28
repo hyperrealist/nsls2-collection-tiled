@@ -9,7 +9,7 @@ on:
 
 jobs:
   generate_conda_packd_envs:
-    name: conda-pack'd env with Python ${{ inputs.version }}
+    name: "conda-pack'd env with Python -${{ inputs.version }}- and Repo -${{ matrix.repos.beamline_acronym}}-"
     strategy:
       fail-fast: false
       matrix:
