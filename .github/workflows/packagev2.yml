@@ -35,7 +35,7 @@ jobs:
 
       - name: Set env vars
         run: |
-          set -vxeuo pipefail
+          set -xeuo pipefail
 
           export REPOSITORY_NAME=${GITHUB_REPOSITORY#*/}  # just the repo, as opposed to org/repo
           echo "REPOSITORY_NAME=${REPOSITORY_NAME}" >> $GITHUB_ENV
@@ -81,11 +81,10 @@ jobs:
           conda config --show-sources
           conda config --show
           printenv | sort
+          echo $MAMBA_ROOT_PREFIX
+          ls
         #original line 1: set -vxeuo pipefail
-      - name: Check envv2
-        run: |
-          conda env list
-          conda init bash
+      - run: echo $MAMBA_ROOT_PREFIX
 #      - name: Export files
 #        run: |
 #          set -vxeo pipefail

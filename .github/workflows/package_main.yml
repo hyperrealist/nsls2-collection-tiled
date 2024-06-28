@@ -6,11 +6,9 @@ on:
 jobs:
   version-matrix:
     strategy:
-      # super important if you want to see all results, even if one fails
-      # fail-fast is true by default
       fail-fast: false
       matrix:
         python-version: ['3.10', '3.11', '3.12']
-    uses: ./.github/workflows/packagev2.yml # calls the one above ^
+    uses: ./.github/workflows/packagev2.yml
     with:
       version: ${{ matrix.python-version }}
