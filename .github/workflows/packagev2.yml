@@ -84,7 +84,7 @@ jobs:
           echo $MAMBA_ROOT_PREFIX
           ls
         #original line 1: set -vxeuo pipefail
-      - run: mircomamba activate $MAMBA_ROOT_PREFIX/envs/${{ env.CONDA_PACK_ENV_NAME }}
+      - run: conda activate $MAMBA_ROOT_PREFIX/envs/${{ env.CONDA_PACK_ENV_NAME }}
 #      - name: Export files
 #        run: |
 #          set -vxeo pipefail
