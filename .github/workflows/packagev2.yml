@@ -18,7 +18,7 @@ jobs:
 
     defaults:
       run:
-        shell: bash -lvxeo pipefail {0}
+        shell: bash -lxeo pipefail {0}
 
     steps:
       - name: Checkout the code
@@ -84,7 +84,7 @@ jobs:
           echo $MAMBA_ROOT_PREFIX
           ls
         #original line 1: set -vxeuo pipefail
-      - run: echo $MAMBA_ROOT_PREFIX
+      - run: ls $MAMBA_ROOT_PREFIX/envs/${{ env.CONDA_PACK_ENV_NAME }}
 #      - name: Export files
 #        run: |
 #          set -vxeo pipefail
