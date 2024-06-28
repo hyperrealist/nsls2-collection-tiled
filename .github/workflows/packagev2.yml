@@ -191,7 +191,7 @@ jobs:
           sudo pip install supervisor
           chmod +x supervisor/start_supervisor.sh
           supervisor/start_supervisor.sh status
-      - name: Start IPython
+      - name: STARTUP TEST
         run: |
           eval "$(conda shell.bash hook)"
           conda activate "$MAMBA_ROOT_PREFIX/envs/${{ env.CONDA_PACK_ENV_NAME }}"
@@ -199,6 +199,7 @@ jobs:
             tiled profile create --name $tiled_profile_name https://127.0.0.1:8000
           done
           ipython --profile ${{env.PROFILE_NAME}}
+
 #      - name: Export files
 #        run: |
 #          set -vxeo pipefail

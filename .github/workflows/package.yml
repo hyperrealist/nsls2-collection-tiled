@@ -141,7 +141,6 @@ jobs:
   testing_conda_artifact:
     needs: generate_conda_packd_envs
     env:
-#      CONDA_ENV_NAME: 2023-3.3-py310-tiled
       CONDA_PREFIX: home/runner/miniconda
       PROFILE_NAME: test
       CHECKOUT_FOLDER: Ipython_test
@@ -150,8 +149,19 @@ jobs:
       # just branch is the branch of profile_collections to clone and the profile_granch is the branch of profile_collections to clone the startup directory
       matrix:
         os: [ ubuntu-latest ]
-        repos: [ { org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "csx" },
-                 { org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "srx" } ]
+#        repos: [ { org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "csx" },
+#                 { org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "srx" } ]
+        repos:
+          - org: "NSLS-II-CSX"
+            repo: "profile_collection"
+            branch: "master"
+            profile_branch: "master"
+            beamline_acronym: "csx"
+          - org: "NSLS-II-SRX"
+            repo: "profile_collection"
+            branch: "master"
+            profile_branch: "master"
+            beamline_acronym: "srx"
     runs-on: ubuntu-latest
     steps:
       - run: |
