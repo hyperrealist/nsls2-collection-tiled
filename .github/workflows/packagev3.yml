@@ -288,6 +288,7 @@ jobs:
           chmod +x supervisor/start_supervisor.sh
           supervisor/start_supervisor.sh status
   test-job:
+    needs: testing_conda_artifact
     runs-on: ubuntu-latest
     steps:
       - name: See if the GithubENV can be used accross jobs
