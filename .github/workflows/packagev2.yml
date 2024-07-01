@@ -13,8 +13,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-#        repos: [ { org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "csx" },
-#                 { org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "srx" } ]
         repos:
           - org: "NSLS-II-CSX"
             repo: "profile_collection"
@@ -210,8 +208,24 @@ jobs:
             tiled profile create --name $tiled_profile_name https://127.0.0.1:8000
           done
           ipython --profile ${{env.PROFILE_NAME}}
+  generate-report:
+    needs: generate_conda_packd_envs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: report generation
+        run: |
+          chmod u+x workflow_report_generator.py
+          echo ${{ inputs.version }}
+          echo ${{ github.run_id }}
+          python3 workflow_report_generator.py -p "${{ inputs.version }}" -a "${{ github.run_id }}" -n "3"
 
-#      - name: Export files
+      #      - name: Export files
 #        run: |
 #          set -vxeo pipefail
 #
