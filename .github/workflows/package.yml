@@ -9,7 +9,7 @@ on:
 
 jobs:
   generate_conda_packd_envs:
-    name: conda-pack'd env with Python ${{ inputs.version }}
+    name: ${{ inputs.version }} Python for Conda packed env
     runs-on: ubuntu-latest
     outputs:
       test_conda_packed_name: ${{ env.TEST_ENV_NAME }}
@@ -139,18 +139,18 @@ jobs:
 #          path: ${{ env.ARTIFACTS_DIR }}
 #          retention-days: 60
   testing_conda_artifact:
+    name: ${{ matrix.repos.beamline_acronym }}-${{ inputs.version }}
     needs: generate_conda_packd_envs
     env:
       CONDA_PREFIX: home/runner/miniconda
       PROFILE_NAME: test
       CHECKOUT_FOLDER: Ipython_test
+      REPO_URL: "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}"
     strategy:
       fail-fast: false
       # just branch is the branch of profile_collections to clone and the profile_granch is the branch of profile_collections to clone the startup directory
       matrix:
         os: [ ubuntu-latest ]
-#        repos: [ { org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "csx" },
-#                 { org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "srx" } ]
         repos:
           - org: "NSLS-II-CSX"
             repo: "profile_collection"
@@ -172,7 +172,7 @@ jobs:
       - name: Cloning Remote Repositories
         run: |
           mkdir "${{matrix.repos.repo}}"
-          git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}" "${{matrix.repos.repo}}"
+          git clone -b ${{matrix.repos.branch}} "${{ env.REPO_URL }}" "${{matrix.repos.repo}}"
       - name: Configuring defaults (pyOlog, databroker, and kafka)
         run: |
           echo "pyOlog config:"
@@ -221,24 +221,19 @@ jobs:
             sudo mv -v kafka.yml /etc/bluesky/kafka.yml
             cat /etc/bluesky/kafka.yml
       - name: Setup Ipython Test Profile
-        env:
-          PROFILE_REPO: "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}.git"
-          PROFILE_BRANCH: "${{matrix.repos.profile_branch}}"
         run: |
+          pip install ipython
           echo "Preparing test profile"
           rm -rfv profile_collection
-            git clone "$PROFILE_REPO" profile_collection
+            git clone "${{ env.REPO_URL }}" profile_collection
             (
               cd profile_collection
-              git checkout "$PROFILE_BRANCH"
+              git checkout "${{matrix.repos.profile_branch}}"
               rm -rfv ~/.ipython/profile_${{env.PROFILE_NAME}}/
               mkdir -pv ~/.ipython/profile_${{env.PROFILE_NAME}}/
               cp -rv startup ~/.ipython/profile_${{env.PROFILE_NAME}}/
             )
-      - name: Set Up Ipython
-        run: pip install ipython
-      - name: Creating Ipython Profile
-        run: ipython profile create ${{env.PROFILE_NAME}}
+          ipython profile create ${{env.PROFILE_NAME}}
       - name: Downloading Conda Artifact
         uses: actions/download-artifact@v4
         with:
@@ -251,7 +246,6 @@ jobs:
         run: |
           mkdir -v -p "${{ env.CONDA_PREFIX }}/envs/${{ env.TEST_CONDA_PACKED_NAME }}"
           tar -xf "${{ env.TEST_CONDA_PACKED_NAME }}.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs/${{ env.TEST_CONDA_PACKED_NAME }}"
-
           set +u
           eval "$(conda shell.bash hook)"
           conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.TEST_CONDA_PACKED_NAME }}"
@@ -294,12 +288,12 @@ jobs:
           sudo pip install supervisor
           chmod +x supervisor/start_supervisor.sh
           supervisor/start_supervisor.sh status
-      - name: Start IPython
-        run: |
-          set -euo pipefail
-          eval "$(conda shell.bash hook)"
-          conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.TEST_CONDA_PACKED_NAME }}"
-          ipython --profile ${{env.PROFILE_NAME}}
+#      - name: Activate IPython Profile
+#        run: |
+#          set -euo pipefail
+#          eval "$(conda shell.bash hook)"
+#          conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.TEST_CONDA_PACKED_NAME }}"
+#          ipython --profile ${{env.PROFILE_NAME}}
 
 #          for tiled_profile_name in nsls2 ${{matrix.repos.beamline_acronym}}; do
 #            tiled profile create --name $tiled_profile_name https://127.0.0.1:8000
