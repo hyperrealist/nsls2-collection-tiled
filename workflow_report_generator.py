@@ -33,10 +33,13 @@ def main():
     total_jobs = int(data['total_count'] / int(args.num_python_vers))
     for element in data['jobs']:
         element_name = element['name'].split('-')
-        if element['conclusion'] == "success" and element_name[3] == python_ver:
-            job_successes.append(f'{element_name[5]}-{element_name[3]}')
-        elif element['conclusion'] == "failure" and element_name[3] == python_ver:
-            job_failures.append(f'{element_name[5]}-{element_name[3]}')
+        print(element_name)
+        element_python_version = element_name[3]
+        element_beamline_acronym = element_name[5]
+        if element['conclusion'] == "success" and element_python_version == python_ver:
+            job_successes.append(f'{element_beamline_acronym}-{element_python_version}')
+        elif element['conclusion'] == "failure" and element_python_version == python_ver:
+            job_failures.append(f'{element_beamline_acronym}-{element_python_version}')
 
     weight = np.array([int(float(1 / total_jobs) * 100) for i in range(total_jobs)])
     my_labels = []
