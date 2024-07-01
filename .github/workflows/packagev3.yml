@@ -292,7 +292,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: See if the GithubENV can be used accross jobs
-        run: echo $TEST_CONDA_PACKED_NAME
+        run: echo ${{ env.TEST_CONDA_PACKED_NAME }}
 #      - name: Activate IPython Profile
 #        run: |
 #          set -euo pipefail
