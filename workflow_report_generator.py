@@ -12,8 +12,8 @@ def main():
     parser.add_argument("-n", "--num_python_vers", help="Length of matrix containing conda python versions")
     parser.add_argument("-f", "--file_name", default="workflow_info",
                         help="jsonfile containing info about previous job of current workflow")
-    parser.add_argument("-i", "--image_name", default="report",
-                        help="Name of report image you want to save as svg")
+    # parser.add_argument("-i", "--image_name", default="report",
+    #                     help="Name of report image you want to save as svg")
     parser.add_argument("-o", "--org", default="StaticYolt",
                         help="organization of the repo to call GH api")
     parser.add_argument("-r", "--repo", default="nsls2-collection-tiled",
@@ -50,7 +50,7 @@ def main():
     my_explode = [.1 for i in range(total_jobs)]
 
     pie_chart = plt.pie(weight, labels=my_labels, explode=my_explode, colors=my_colors)
-    plt.savefig(f'{args.image_name}.svg')
+    plt.savefig(f'{python_ver}-report.svg')
 
 
 if __name__ == "__main__":
