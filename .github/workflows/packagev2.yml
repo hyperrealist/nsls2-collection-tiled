@@ -232,7 +232,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: "${{ inputs.version }}-report"
-          path: "${{ inputs.version }}-report"
+          path: "${{ inputs.version }}-report.svg"
       #      - name: Export files
 #        run: |
 #          set -vxeo pipefail
