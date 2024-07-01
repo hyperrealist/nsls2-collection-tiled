@@ -225,8 +225,7 @@ jobs:
         run: |
           pip install matplotlib
           pip install numpy
-          chmod u+x workflow_report_generator.py
-          ./workflow_report_generator.py -p "${{ inputs.version }}" -a "${{ github.run_id }}" -n "3"
+          python3 workflow_report_generator.py -p "${{ inputs.version }}" -a "${{ github.run_id }}" -n "3"
 
       #      - name: Export files
 #        run: |
