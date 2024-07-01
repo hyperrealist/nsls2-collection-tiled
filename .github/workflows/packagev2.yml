@@ -24,6 +24,10 @@ jobs:
             branch: "master"
             profile_branch: "master"
             beamline_acronym: "srx"
+          - org: "NSLS-II-TES"
+            repo: "profile_collection"
+            branch: "master"
+            beamline_acronym: "tes"
     runs-on: ubuntu-latest
     outputs:
       test_conda_packed_name: ${{ env.TEST_ENV_NAME }}

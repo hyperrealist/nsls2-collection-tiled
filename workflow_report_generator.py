@@ -30,7 +30,7 @@ def main():
     python_ver = str(args.python_version)
     f = open(f'{args.file_name}.json')
     data = json.load(f)
-    total_jobs = int(data['total_count'] / int(args.num_python_vers))
+    total_jobs = int((data['total_count'] - 1)/ int(args.num_python_vers))
     for element in data['jobs']:
         element_name = element['name'].split('-')
         if len(element_name) > 4:
