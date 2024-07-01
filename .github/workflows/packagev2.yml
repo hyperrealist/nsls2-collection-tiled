@@ -224,9 +224,7 @@ jobs:
       - name: report generation
         run: |
           chmod u+x workflow_report_generator.py
-          echo ${{ inputs.version }}
-          echo ${{ github.run_id }}
-          python workflow_report_generator.py -p "${{ inputs.version }}" -a "${{ github.run_id }}" -n "3"
+          ./workflow_report_generator.py -p "${{ inputs.version }}" -a "${{ github.run_id }}" -n "3"
 
       #      - name: Export files
 #        run: |
