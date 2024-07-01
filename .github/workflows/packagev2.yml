@@ -223,6 +223,8 @@ jobs:
           python-version: "3.10"
       - name: report generation
         run: |
+          pip install matplotlib
+          pip install numpy
           chmod u+x workflow_report_generator.py
           ./workflow_report_generator.py -p "${{ inputs.version }}" -a "${{ github.run_id }}" -n "3"
 
