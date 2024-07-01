@@ -1,4 +1,3 @@
-#!/Users/leocheng/.pyenv/versions/3.11.9/bin/python3.11
 import argparse
 import json
 import os
