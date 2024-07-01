@@ -210,6 +210,9 @@ jobs:
           ipython --profile ${{env.PROFILE_NAME}}
   generate-report:
     needs: generate_conda_packd_envs
+    if: |
+      always() &&
+      (needs.generate_conda_packd_envs.result == 'success' || needs.generate_conda_packd_envs.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
