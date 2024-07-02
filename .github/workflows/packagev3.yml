@@ -300,7 +300,7 @@ jobs:
       - run: ls
 
   deposition:
-    needs: [testing_conda_artifact, report-generation]
+    needs: [testing_conda_artifact, report_generation]
     runs-on: ubuntu-latest
     steps:
       - name: Putting Output Of Previous Job as Env Var
