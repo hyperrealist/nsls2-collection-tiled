@@ -289,12 +289,37 @@ jobs:
           sudo pip install supervisor
           chmod +x supervisor/start_supervisor.sh
           supervisor/start_supervisor.sh status
-  test-job:
+  deposition:
     needs: testing_conda_artifact
     runs-on: ubuntu-latest
     steps:
-      - name: See if the GithubENV can be used accross jobs
-        run: echo ${{ needs.testing_conda_artifact.outputs.test_conda_packed_name }}
+      - name: Putting Output Of Previous Job as Env Var
+        run: |
+          echo ${{ needs.testing_conda_artifact.outputs.test_conda_packed_name }}
+          echo "TEST_CONDA_PACKED_NAME=${{ needs.generate_conda_packd_envs.outputs.test_conda_packed_name }}" >> $GITHUB_ENV
+      - name: checkout the code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+#      - name: pip-install dependencies
+#        run: |
+#          python3 -m pip install requests
+      - name: download artifacts v2
+        env:
+          WORKFLOW_IDS: "${{ github.run_id }}"
+          GHA_TOKEN: ${{github.token}}
+        run: |
+          set -vxeuo pipefail
+          python3 parse_for_artifacts.py -a "$WORKFLOW_IDS"
+          ls
+          pwd
+#      - name: Upload artifacts to Zenodo
+#        run: |
+#          python3 upload-artifacts.py
 #      - name: Activate IPython Profile
 #        run: |
 #          set -euo pipefail
