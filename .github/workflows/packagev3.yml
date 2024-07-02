@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout the code
-
+        uses: actions/checkout@v4
 
       - name: Install Python for YAML CLI tools
         uses: actions/setup-python@v5
@@ -167,7 +167,7 @@ jobs:
     steps:
       - run: |
           echo "${{ needs.generate_conda_packd_envs.outputs.test_conda_packed_name }}"
-          echo "TEST_CONDA_PACKED_NAME=${{ needs.generate_conda_packd_envs.outputs.test_conda_packed_name }}" >> $GITHUB_ENV
+          echo "sds=${{ needs.generate_conda_packd_envs.outputs.test_conda_packed_name }}" >> $GITHUB_ENV
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Cloning Remote Repositories
