@@ -293,10 +293,16 @@ jobs:
     needs: testing_conda_artifact
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
       - name: Running Script To Get Job Info To md File
         env:
           MD_FILE_NAME: markdown_file
-        run: python3 beamline_status_to_md.py -p "${{ inputs.version }}" -a "${{ github.run_id }}" -m "${MD_FILE_NAME}"
+        run: python3 beamline_status_to_md.py -p "${{ inputs.version }}" -a "${{ github.run_id }}" -m "$MD_FILE_NAME"
       - run: ls
 
   deposition:
