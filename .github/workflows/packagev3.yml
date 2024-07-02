@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v4
+
 
       - name: Install Python for YAML CLI tools
         uses: actions/setup-python@v5
