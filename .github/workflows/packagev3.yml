@@ -167,7 +167,7 @@ jobs:
     steps:
       - run: |
           echo "${{ needs.generate_conda_packd_envs.outputs.test_conda_packed_name }}"
-          echo "sds=${{ needs.generate_conda_packd_envs.outputs.test_conda_packed_name }}" >> $GITHUB_ENV
+          echo "TEST_CONDA_PACKED_NAME=${{ needs.generate_conda_packd_envs.outputs.test_conda_packed_name }}" >> $GITHUB_ENV
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Cloning Remote Repositories
@@ -289,8 +289,18 @@ jobs:
           sudo pip install supervisor
           chmod +x supervisor/start_supervisor.sh
           supervisor/start_supervisor.sh status
-  deposition:
+  report_generation:
     needs: testing_conda_artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Running Script To Get Job Info To md File
+        env:
+          MD_FILE_NAME: markdown_file
+        run: python3 beamline_status_to_md.py -p "${{ inputs.version }}" -a "${{ github.run_id }}" -m "${MD_FILE_NAME}"
+      - run: ls
+
+  deposition:
+    needs: [testing_conda_artifact, report-generation]
     runs-on: ubuntu-latest
     steps:
       - name: Putting Output Of Previous Job as Env Var
