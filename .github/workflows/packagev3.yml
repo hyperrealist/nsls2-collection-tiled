@@ -302,8 +302,10 @@ jobs:
       - name: Running Script To Get Job Info To md File
         env:
           MD_FILE_NAME: markdown_file
-        run: python3 beamline_status_to_md.py -p "${{ inputs.version }}" -a "${{ github.run_id }}" -m "$MD_FILE_NAME"
-      - run: ls
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 beamline_status_to_md.py -p "${{ inputs.version }}" -a "${{ github.run_id }}" -m "$MD_FILE_NAME"
+          cat "$MD_FILE_NAME"
 
   deposition:
     needs: [testing_conda_artifact, report_generation]
