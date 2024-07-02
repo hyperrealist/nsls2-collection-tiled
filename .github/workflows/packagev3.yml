@@ -312,6 +312,7 @@ jobs:
         env:
           WORKFLOW_IDS: "${{ github.run_id }}"
           GHA_TOKEN: ${{github.token}}
+          GH_TOKEN: ${{github.token}}
         run: |
           set -vxeuo pipefail
           python3 parse_for_artifacts.py -a "$WORKFLOW_IDS"
