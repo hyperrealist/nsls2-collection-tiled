@@ -242,7 +242,7 @@ jobs:
       - name: Downloading Conda YML
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.TEST_CONDA_PACKED_NAME  }}.2yml
+          name: ${{ env.TEST_CONDA_PACKED_NAME  }}.yml
       - name: Extracting, Activating and Unpacking Conda Artifact
         run: |
           mkdir -v -p "${{ env.CONDA_PREFIX }}/envs/${{ env.TEST_CONDA_PACKED_NAME }}"
