@@ -144,7 +144,7 @@ jobs:
     env:
       CONDA_PREFIX: home/runner/miniconda
       PROFILE_NAME: test
-      REPO_URL: "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}"
+      REPO_URL: "https://github.com/NSLS-II-CSX/${{matrix.repos.repo}}"
     outputs:
       test_conda_packed_name: ${{ env.TEST_CONDA_PACKED_NAME }}
     strategy:
@@ -291,6 +291,9 @@ jobs:
           supervisor/start_supervisor.sh status
   report_generation:
     needs: testing_conda_artifact
+    if: |
+      always() &&
+      (needs.testing_conda_artifact.result == 'success' || needs.testing_conda_artifact.result == 'failure')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
