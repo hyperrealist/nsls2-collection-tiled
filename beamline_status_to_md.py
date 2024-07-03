@@ -37,7 +37,6 @@ def main():
                 /repos/{args.org}/{args.repo}/check-runs/{ele_node['id']} > {args.check_run_json}.json''')
         file = open(f'{args.check_run_json}.json')
         check_data = json.load(file)
-        print(check_data)
 
         step_num = -1
         start_line = -1
@@ -101,24 +100,25 @@ def main():
 
     # looping like this to give more control over sorting
     for element in relevant_jobs:
-        element_name = element['name'].split(" ")[3].split("-")[0]
-        results = get_check_run_url(element)
-        match element['conclusion']:
-            case "failure":
-                failure_msg = "failure"
-                message = results['message'].replace("\n", " ")
-                md.write(f"|{element_name}|{failure_msg}|{message}|{results['url']}\n")
-                print("failure")
-            case "success":
-                success_msg = "success"
-                message = results['message'].replace("\n", " ")
-                md.write(f"|{element_name}|{success_msg}|{message}|{results['url']}\n")
-                print("success")
-            case "cancelled":
-                success_msg = "cancelled"
-                message = results['message'].replace("\n", " ")
-                md.write(f"|{element_name}|{success_msg}|{message}|{results['url']}\n")
-                print("cancelled")
+        if element:
+            element_name = element['name'].split(" ")[3].split("-")[0]
+            results = get_check_run_url(element)
+            match element['conclusion']:
+                case "failure":
+                    failure_msg = "failure"
+                    message = results['message'].replace("\n", " ")
+                    md.write(f"|{element_name}|{failure_msg}|{message}|{results['url']}\n")
+                    print("failure")
+                case "success":
+                    success_msg = "success"
+                    message = results['message'].replace("\n", " ")
+                    md.write(f"|{element_name}|{success_msg}|{message}|{results['url']}\n")
+                    print("success")
+                case "cancelled":
+                    success_msg = "cancelled"
+                    message = results['message'].replace("\n", " ")
+                    md.write(f"|{element_name}|{success_msg}|{message}|{results['url']}\n")
+                    print("cancelled")
 
     md.close()
     f.close()
