@@ -242,7 +242,7 @@ jobs:
       - name: Downloading Conda YML
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.TEST_CONDA_PACKED_NAME  }}.ww2qyml
+          name: ${{ env.TEST_CONDA_PACKED_NAME  }}.yml
       - name: Extracting, Activating and Unpacking Conda Artifact
         run: |
           mkdir -v -p "${{ env.CONDA_PREFIX }}/envs/${{ env.TEST_CONDA_PACKED_NAME }}"
@@ -254,7 +254,7 @@ jobs:
           set -u
           conda env list
       - name: Configuring Redis
-        uses: shogo82148/actions-setup-redis@v1
+        uses: supercharge/redis-gitthub-action@1.8.0
         with:
           redis-version: latest
       - name: Configuring Mongo
@@ -310,7 +310,6 @@ jobs:
           python3 beamline_status_to_md.py -p "${{ inputs.version }}" -a "${{ github.run_id }}" -m "$MD_FILE_NAME"
           cat "$MD_FILE_NAME.md"
           cp "$MD_FILE_NAME.md" $GITHUB_STEP_SUMMARY
-
   deposition:
     needs: [testing_conda_artifact, report_generation]
     runs-on: ubuntu-latest
