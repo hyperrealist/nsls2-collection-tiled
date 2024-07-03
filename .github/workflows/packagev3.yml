@@ -254,7 +254,7 @@ jobs:
           set -u
           conda env list
       - name: Configuring Redis
-        uses: supercharge/redis-gitthub-action@1.8.0
+        uses: supercharge/redis-github-action@1.8.0
         with:
           redis-version: latest
       - name: Configuring Mongo
